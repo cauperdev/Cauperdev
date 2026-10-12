@@ -224,6 +224,14 @@
             scroll-margin-top: 258px;
         }
 
+        #projetos {
+            min-height: calc(100vh - 83px);
+            scroll-margin-top: 83px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
         .section-title {
             font-size: 48px;
             margin-bottom: 70px;
@@ -235,11 +243,87 @@
             font-weight: 800;
         }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        .carousel {
+            position: relative;
+        }
+
+        .projects-track {
+            display: flex;
             gap: 40px;
-            margin-bottom: 60px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            padding: 30px 36px 60px;
+            margin: -30px -36px 0;
+            scroll-padding: 0 36px;
+        }
+
+        .projects-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .projects-track .project-card {
+            flex: 1 0 calc((100% - 80px) / 3);
+            display: flex;
+            flex-direction: column;
+            scroll-snap-align: start;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: -36px;
+        }
+
+        .carousel-nav[hidden] {
+            display: none;
+        }
+
+        .carousel-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            background: rgba(10, 14, 39, 0.8);
+            color: #00D9FF;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-arrow:hover:not(:disabled) {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .carousel-arrow:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        @media (min-width: 1360px) {
+            .carousel-nav {
+                margin-top: 0;
+            }
+
+            .carousel-arrow {
+                position: absolute;
+                top: calc(50% - 30px);
+                transform: translateY(-50%);
+            }
+
+            .carousel-arrow.prev {
+                left: -64px;
+            }
+
+            .carousel-arrow.next {
+                right: -64px;
+            }
         }
 
         .project-card {
@@ -297,7 +381,9 @@
 
         .project-more {
             display: inline-block;
-            margin-top: 24px;
+            align-self: flex-start;
+            margin-top: auto;
+            padding-top: 24px;
             color: #00FFA3;
             font-weight: 600;
         }
@@ -413,7 +499,27 @@
             font-size: 14px;
         }
 
+        @media (max-width: 1280px) {
+            .projects-track {
+                padding-left: 0;
+                padding-right: 0;
+                margin-left: 0;
+                margin-right: 0;
+                scroll-padding: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .projects-track .project-card {
+                flex-basis: calc((100% - 40px) / 2);
+            }
+        }
+
         @media (max-width: 768px) {
+            .projects-track .project-card {
+                flex-basis: 100%;
+            }
+
             .hero h1 {
                 font-size: 48px;
             }
@@ -490,18 +596,30 @@
     <section class="section container" id="projetos">
         <h2 class="section-title">Projetos Destacados</h2>
 
-        <div class="projects-grid">
-            <a class="project-card project-link" href="projeto-ms.html">
-                <h3>🏭 MS · Sistema de Manutenção</h3>
-                <p>Sistema de gestão de manutenção de maquinário de indústria: avisa quando cada máquina precisa de cuidado, guia o técnico pelo celular e guarda a prova de que o serviço foi feito.</p>
-                <div class="tech-stack">
-                    <span class="tech-tag">C#</span>
-                    <span class="tech-tag">ASP.NET Core</span>
-                    <span class="tech-tag">SQLite</span>
-                </div>
-                <span class="project-more">Ver as telas do sistema →</span>
-            </a>
+        <div class="carousel">
+            <!-- Para adicionar um projeto: copie um bloco <a class="project-card"> inteiro e cole abaixo do último.
+                 Os cards ficam lado a lado (até 3 por vez); quando não cabem mais, as setas aparecem sozinhas. -->
+            <div class="projects-track">
+                <a class="project-card project-link" href="projeto-ms.html">
+                    <h3>🏭 MS · Sistema de Manutenção</h3>
+                    <p>Sistema de gestão de manutenção de maquinário de indústria: avisa quando cada máquina precisa de cuidado, guia o técnico pelo celular e guarda a prova de que o serviço foi feito.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">C#</span>
+                        <span class="tech-tag">ASP.NET Core</span>
+                        <span class="tech-tag">SQLite</span>
+                    </div>
+                    <span class="project-more">Ver as telas do sistema →</span>
+                </a>
+            </div>
 
+            <div class="carousel-nav" hidden>
+                <button class="carousel-arrow prev" type="button" aria-label="Projetos anteriores">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+                </button>
+                <button class="carousel-arrow next" type="button" aria-label="Próximos projetos">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
         </div>
     </section>
 
@@ -595,5 +713,30 @@
         </div>
     </footer>
 
+    <script>
+        // Carrossel de projetos: as setas só aparecem quando há mais cards do que cabem na tela.
+        const trilho = document.querySelector('.projects-track');
+        const setas = document.querySelector('.carousel-nav');
+        const [anterior, proximo] = setas.querySelectorAll('.carousel-arrow');
+
+        function atualizarSetas() {
+            const sobra = trilho.scrollWidth - trilho.clientWidth;
+            setas.hidden = sobra <= 1;
+            anterior.disabled = trilho.scrollLeft <= 1;
+            proximo.disabled = trilho.scrollLeft >= sobra - 1;
+        }
+
+        // Cada clique anda uma "página": a largura dos cards visíveis mais o espaço entre eles.
+        function rolar(direcao) {
+            const estilo = getComputedStyle(trilho);
+            const pagina = trilho.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight) + parseFloat(estilo.columnGap);
+            trilho.scrollBy({ left: direcao * pagina });
+        }
+
+        anterior.addEventListener('click', () => rolar(-1));
+        proximo.addEventListener('click', () => rolar(1));
+        trilho.addEventListener('scroll', atualizarSetas);
+        new ResizeObserver(atualizarSetas).observe(trilho);
+    </script>
 </body>
 </html>
