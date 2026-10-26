@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NRE · Controle de Gastos Extras | Cauperdev</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=2">
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg?v=2">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=2">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00D9FF;
+            --secondary: #FF006E;
+            --dark: #0A0E27;
+            --light: #F5F7FA;
+            --accent: #00FFA3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A0E27 0%, #1a1f3a 100%);
+            background-attachment: fixed;
+            color: #E0E0E0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 0, 110, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #F5F7FA;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .logo img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .logo-nome span {
+            font-weight: 300;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .voltar {
+            color: #00D9FF;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            background: rgba(0, 217, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .voltar:hover {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: rgba(0, 217, 255, 0.6);
+        }
+
+        /* ---------- Abertura ---------- */
+        .abertura {
+            margin-top: 80px;
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        .abertura h1 {
+            font-size: 52px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        .abertura p {
+            font-size: 20px;
+            color: #B0B0B0;
+            max-width: 760px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .section {
+            padding: 50px 0;
+        }
+
+        .section-title {
+            font-size: 34px;
+            margin-bottom: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        /* ---------- Como funciona (5 passos) ---------- */
+        .passos {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+        }
+
+        .passos li {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.08), rgba(255, 0, 110, 0.08));
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            border-radius: 15px;
+            padding: 24px 20px;
+        }
+
+        .passos .numero {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            color: #0A0E27;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .passos b {
+            display: block;
+            color: #00FFA3;
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .passos span {
+            color: #A0A0A0;
+            font-size: 15px;
+        }
+
+        /* ---------- Telas (print + explicação) ---------- */
+        .tela {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 0, 110, 0.05));
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .tela h3 {
+            font-size: 24px;
+            color: #00D9FF;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .tela p {
+            color: #B0B0B0;
+            font-size: 17px;
+            line-height: 1.8;
+            margin-bottom: 22px;
+            max-width: 780px;
+        }
+
+        .print {
+            display: block;
+            width: 100%;
+            padding: 0;
+            border: 1px solid rgba(0, 217, 255, 0.25);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #0A0E27;
+            cursor: zoom-in;
+            transition: all 0.3s;
+        }
+
+        .print:hover {
+            border-color: rgba(0, 217, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.15);
+        }
+
+        .print img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Print tirado no celular: estreito e centralizado */
+        .print.celular {
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        /* Enquanto o print ainda não foi colocado na pasta */
+        .print.faltando {
+            cursor: default;
+            border-style: dashed;
+            padding: 60px 20px;
+            color: #707070;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .print.faltando:hover {
+            border-color: rgba(0, 217, 255, 0.25);
+            box-shadow: none;
+        }
+
+        .print.faltando code {
+            display: block;
+            margin-top: 6px;
+            color: #00D9FF;
+            font-size: 14px;
+        }
+
+        /* ---------- Também faz ---------- */
+        .extras {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .extras li {
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            border-radius: 15px;
+            padding: 22px;
+            color: #A0A0A0;
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .extras a {
+            color: #00D9FF;
+        }
+
+        .extras b {
+            display: block;
+            color: #00FFA3;
+            margin-bottom: 4px;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 255, 163, 0.2));
+            color: #00D9FF;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .final {
+            text-align: center;
+            padding: 30px 0 80px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #00D9FF;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            color: #0A0E27;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.5);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            color: #707070;
+            font-size: 14px;
+        }
+
+        /* ---------- Print ampliado ---------- */
+        .ampliado {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(5, 8, 22, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: zoom-out;
+        }
+
+        .ampliado.aberto {
+            display: flex;
+        }
+
+        .ampliado img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .abertura {
+                padding: 50px 0 20px;
+            }
+
+            .abertura h1 {
+                font-size: 34px;
+            }
+
+            .abertura p {
+                font-size: 17px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .tela {
+                padding: 22px 18px;
+            }
+
+            .tela h3 {
+                font-size: 21px;
+            }
+
+            .tela p {
+                font-size: 16px;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .voltar {
+                padding: 6px 14px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="img/logo.svg" alt="">
+                    <span class="logo-nome">Cauper<span>dev</span></span>
+                </a>
+                <a href="index.html#projetos" class="voltar">← Voltar</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="abertura">
+        <div class="container">
+            <h1>NRE · Controle de Gastos Extras</h1>
+            <p>
+                Um sistema que acompanha os gastos fora da rotina de uma fábrica, como peças, serviços e ferramentas
+                pedidos para um cliente, do pedido até a cobrança. Ele faz as contas em dólar e em reais,
+                com frete, seguro e impostos, e guarda os documentos de cada compra.
+            </p>
+        </div>
+    </section>
+
+    <section class="section container">
+        <h2 class="section-title">Como funciona</h2>
+        <ol class="passos">
+            <li>
+                <div class="numero">1</div>
+                <b>Pedido</b>
+                <span>O gasto é aberto na tela ou importado direto da planilha de Excel do cliente.</span>
+            </li>
+            <li>
+                <div class="numero">2</div>
+                <b>Aprovação</b>
+                <span>O cliente aprova o valor em dólar e o sistema calcula os reais e os impostos.</span>
+            </li>
+            <li>
+                <div class="numero">3</div>
+                <b>Compra</b>
+                <span>Os pedidos de compra ficam ligados ao gasto, com acesso direto ao site de compras.</span>
+            </li>
+            <li>
+                <div class="numero">4</div>
+                <b>Chegada</b>
+                <span>Cada importação ou compra nacional é lançada com os itens, o dólar do dia, o frete e o seguro.</span>
+            </li>
+            <li>
+                <div class="numero">5</div>
+                <b>Fechamento</b>
+                <span>O sistema compara o custo real com o aprovado, explica a diferença e gera o relatório.</span>
+            </li>
+        </ol>
+    </section>
+
+    <!-- AS TELAS: cada bloco é um print + uma explicação curta.
+         Os prints ficam na pasta img/nre/ com o nome indicado em cada <img>. -->
+    <section class="section container">
+        <h2 class="section-title">As telas do sistema</h2>
+
+        <article class="tela">
+            <h3>1. Escolha do cliente</h3>
+            <p>Logo depois de entrar, cada cliente aparece num cartão com a sua logo. Ao escolher um, o sistema mostra só os gastos daquele cliente.</p>
+            <button type="button" class="print"><img src="img/nre/00-areas.png?v=1" alt="Tela de escolha do cliente, com os cartões das logos"></button>
+        </article>
+
+        <article class="tela">
+            <h3>2. Lista dos gastos</h3>
+            <p>Todos os gastos do cliente numa lista: o que ainda espera aprovação, o que já foi concluído e o que foi recusado. A busca encontra um gasto pelo número, modelo, nota fiscal, invoice ou pedido de compra.</p>
+            <button type="button" class="print"><img src="img/nre/01-lista.png?v=1" alt="Tela com a lista das NRE, os valores e a situação de cada uma"></button>
+        </article>
+
+        <article class="tela">
+            <h3>3. Resumo e aprovação</h3>
+            <p>Aqui ficam os dados da aprovação do cliente. O sistema faz sozinho as mesmas contas da planilha: valor em reais, impostos e o total a cobrar.</p>
+            <button type="button" class="print"><img src="img/nre/02-resumo.png?v=1" alt="Tela de uma NRE na aba Resumo, com a aprovação e as contas"></button>
+        </article>
+
+        <article class="tela">
+            <h3>4. Detalhe das compras</h3>
+            <p>Cada importação aparece com a invoice, o dólar do dia, o frete e o seguro, e cada compra nacional com a nota fiscal. Os itens são convertidos para reais linha por linha, como na planilha do cliente.</p>
+            <button type="button" class="print"><img src="img/nre/03-detalhado.png?v=1" alt="Tela de uma NRE na aba Detalhado, com a importação e a compra nacional"></button>
+        </article>
+
+        <article class="tela">
+            <h3>5. Manual dentro do sistema</h3>
+            <p>O caminho de um gasto, do pedido ao fechamento, explicado em uma tela, com quem faz cada passo. Assim quem chega novo aprende sozinho.</p>
+            <button type="button" class="print"><img src="img/nre/04-fluxo.png?v=1" alt="Tela do manual com o fluxo da NRE em seis passos"></button>
+        </article>
+
+        <article class="tela">
+            <h3>6. Quem pode ver o quê</h3>
+            <p>Cada pessoa vê só o que precisa. O analista abre e acompanha os gastos, o coordenador aprova e o administrador escolhe quem pode ver e mexer em cada tela.</p>
+            <button type="button" class="print"><img src="img/nre/05-permissoes.png?v=1" alt="Tela de grupos com as permissões do grupo Analista"></button>
+        </article>
+
+        <article class="tela">
+            <h3>7. No celular</h3>
+            <p>No celular a lista vira cartões coloridos pela situação de cada gasto. Também funciona em inglês, espanhol, chinês e coreano.</p>
+            <button type="button" class="print celular"><img src="img/nre/06-celular.png?v=1" alt="Sistema aberto no celular, com as NRE em cartões"></button>
+        </article>
+    </section>
+
+    <section class="section container">
+        <h2 class="section-title">Também faz</h2>
+        <ul class="extras">
+            <li><b>Importa o Excel do cliente</b>Lê as planilhas que o cliente já usa e cria ou atualiza os gastos, sem duplicar.</li>
+            <li><b>Relatório em Excel</b>Gera o resumo e o detalhe de cada gasto no formato que o cliente pede.</li>
+            <li><b>Documentos</b>Invoice, declaração de importação, nota fiscal e comprovantes ficam guardados junto com o gasto.</li>
+            <li><b>Histórico</b>Mostra de forma simples o que mudou em cada gasto, quem mudou e quando.</li>
+            <li><b>Origem</b>Começou como uma parte do <a href="projeto-ms.html">sistema de manutenção MS</a> e virou um sistema próprio.</li>
+        </ul>
+    </section>
+
+    <section class="section container">
+        <h2 class="section-title">Feito com</h2>
+        <div class="tech-stack">
+            <span class="tech-tag">C#</span>
+            <span class="tech-tag">ASP.NET Core</span>
+            <span class="tech-tag">Razor Pages</span>
+            <span class="tech-tag">SQLite</span>
+            <span class="tech-tag">JavaScript</span>
+            <span class="tech-tag">Bootstrap</span>
+        </div>
+    </section>
+
+    <div class="final container">
+        <a href="index.html#contato" class="btn">Entre em Contato</a>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024-2025 Cauperdev. Desenvolvido com código limpo.</p>
+        </div>
+    </footer>
+
+    <div class="ampliado" id="ampliado"><img src="" alt=""></div>
+
+    <script>
+        const ampliado = document.getElementById('ampliado');
+        const imagemAmpliada = ampliado.querySelector('img');
+
+        document.querySelectorAll('.print').forEach(botao => {
+            const img = botao.querySelector('img');
+
+            // Print que ainda não está na pasta: mostra o nome do arquivo esperado
+            const marcarFaltando = () => {
+                botao.classList.add('faltando');
+                botao.disabled = true;
+                botao.innerHTML = `Print ainda não adicionado<code>${img.getAttribute('src')}</code>`;
+            };
+            if (img.complete && img.naturalWidth === 0) marcarFaltando();
+            else img.addEventListener('error', marcarFaltando);
+
+            // Clique no print abre ele em tamanho grande
+            botao.addEventListener('click', () => {
+                imagemAmpliada.src = img.src;
+                imagemAmpliada.alt = img.alt;
+                ampliado.classList.add('aberto');
+            });
+        });
+
+        ampliado.addEventListener('click', () => ampliado.classList.remove('aberto'));
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') ampliado.classList.remove('aberto');
+        });
+    </script>
+</body>
+</html>

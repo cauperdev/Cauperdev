@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cauperdev - Full Stack Developer</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png?v=2">
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg?v=2">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=2">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00D9FF;
+            --secondary: #FF006E;
+            --dark: #0A0E27;
+            --light: #F5F7FA;
+            --accent: #00FFA3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A0E27 0%, #1a1f3a 100%);
+            color: #E0E0E0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 0, 110, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header .container {
+            max-width: none;
+            padding: 0 8%;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a:last-child {
+            margin-right: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 26px;
+            font-weight: 700;
+            color: #F5F7FA;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .logo img {
+            width: 36px;
+            height: 36px;
+        }
+
+        .logo-nome span {
+            font-weight: 300;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav a {
+            color: #E0E0E0;
+            text-decoration: none;
+            margin: 0 25px;
+            transition: all 0.3s;
+            position: relative;
+            font-weight: 500;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00D9FF, #00FFA3);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            margin-top: 80px;
+            padding: 120px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 217, 255, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(30px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            padding-bottom: 0.2em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3, #FF006E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -2px;
+            line-height: 1.15;
+        }
+
+        .hero p {
+            font-size: 22px;
+            color: #00D9FF;
+            max-width: 720px;
+            margin: 0 auto 40px;
+            font-weight: 300;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            color: #0A0E27;
+            border-color: #00D9FF;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #FF006E;
+            border-color: #FF006E;
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 0, 110, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(255, 0, 110, 0.4);
+        }
+
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        #sobre {
+            scroll-margin-top: 258px;
+        }
+
+        #projetos {
+            min-height: calc(100vh - 83px);
+            scroll-margin-top: 83px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section-title {
+            font-size: 48px;
+            margin-bottom: 70px;
+            text-align: center;
+            background: linear-gradient(135deg, #00D9FF, #00FFA3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .carousel {
+            position: relative;
+        }
+
+        .projects-track {
+            display: flex;
+            gap: 40px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            padding: 30px 36px 60px;
+            margin: -30px -36px 0;
+            scroll-padding: 0 36px;
+        }
+
+        .projects-track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .projects-track .project-card {
+            flex: 1 0 calc((100% - 80px) / 3);
+            display: flex;
+            flex-direction: column;
+            scroll-snap-align: start;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: -36px;
+        }
+
+        .carousel-nav[hidden] {
+            display: none;
+        }
+
+        .carousel-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            background: rgba(10, 14, 39, 0.8);
+            color: #00D9FF;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .carousel-arrow:hover:not(:disabled) {
+            border-color: #00D9FF;
+            background: rgba(0, 217, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .carousel-arrow:disabled {
+            opacity: 0.3;
+            cursor: default;
+        }
+
+        @media (min-width: 1360px) {
+            .carousel-nav {
+                margin-top: 0;
+            }
+
+            .carousel-arrow {
+                position: absolute;
+                top: calc(50% - 30px);
+                transform: translateY(-50%);
+            }
+
+            .carousel-arrow.prev {
+                left: -64px;
+            }
+
+            .carousel-arrow.next {
+                right: -64px;
+            }
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 0, 110, 0.05));
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 40px;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00D9FF, #FF006E, #00FFA3);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .project-card:hover {
+            transform: translateY(-15px);
+            border-color: rgba(0, 217, 255, 0.5);
+            box-shadow: 0 30px 60px rgba(0, 217, 255, 0.2);
+        }
+
+        .project-card h3 {
+            font-size: 24px;
+            color: #00D9FF;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .project-card p {
+            color: #B0B0B0;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .project-link {
+            display: block;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .project-more {
+            display: inline-block;
+            align-self: flex-start;
+            margin-top: auto;
+            padding-top: 24px;
+            color: #00FFA3;
+            font-weight: 600;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tech-tag {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.2), rgba(0, 255, 163, 0.2));
+            color: #00D9FF;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .skill-box {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.08), rgba(255, 0, 110, 0.08));
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            padding: 35px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s;
+        }
+
+        .skill-box:hover {
+            border-color: rgba(0, 217, 255, 0.5);
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.15), rgba(255, 0, 110, 0.15));
+            transform: translateY(-5px);
+        }
+
+        .skill-box h3 {
+            color: #00FFA3;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .skill-box p {
+            color: #A0A0A0;
+            line-height: 2;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 0, 110, 0.1));
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            padding: 80px 40px;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .contact-section h2 {
+            font-size: 42px;
+            color: #00D9FF;
+            margin-bottom: 30px;
+            font-weight: 800;
+        }
+
+        .contact-section p {
+            font-size: 18px;
+            color: #B0B0B0;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-data {
+            font-size: 18px;
+            color: #B0B0B0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .contact-data a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            color: #E0E0E0;
+            text-decoration: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .contact-data a:hover {
+            color: #00D9FF;
+            border-color: rgba(0, 217, 255, 0.5);
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid rgba(0, 217, 255, 0.1);
+            color: #707070;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1280px) {
+            .projects-track {
+                padding-left: 0;
+                padding-right: 0;
+                margin-left: 0;
+                margin-right: 0;
+                scroll-padding: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .projects-track .project-card {
+                flex-basis: calc((100% - 40px) / 2);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .projects-track .project-card {
+                flex-basis: 100%;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <img src="img/logo.svg" alt="">
+                    <span class="logo-nome">Cauper<span>dev</span></span>
+                </a>
+                <nav>
+                    <a href="#sobre">Sobre</a>
+                    <a href="#projetos">Projetos</a>
+                    <a href="#habilidades">Habilidades</a>
+                    <a href="#contato">Contatos</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="container">
+                <h1>Sistemas sob medida<br>para o seu negócio</h1>
+                <p>Da linha de produção ao ponto de venda: software claro, direto e feito para quem usa</p>
+                <div class="cta-buttons">
+                    <a href="#contato" class="btn btn-primary">Entre em Contato</a>
+                    <a href="https://github.com/cauperdev" class="btn btn-secondary">Ver no GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="sobre">
+        <h2 class="section-title">Sobre Mim</h2>
+        <p style="font-size: 18px; text-align: center; max-width: 900px; margin: 0 auto; color: #B0B0B0; line-height: 1.9;">
+            Sou Christhian Cauper, o desenvolvedor por trás da Cauperdev.
+            Desenvolvo sistemas sob medida para empresas de diferentes segmentos, da linha de produção ao ponto de venda.
+            Cada projeto é pensado para quem vai usá-lo: telas claras, navegação direta e informações bem organizadas,
+            para que a equipe adote a ferramenta com naturalidade desde o primeiro dia. O resultado são operações
+            mais ágeis, menos retrabalho e decisões apoiadas em dados confiáveis.
+        </p>
+    </section>
+
+    <section class="section container" id="projetos">
+        <h2 class="section-title">Projetos Destacados</h2>
+
+        <div class="carousel">
+            <!-- Para adicionar um projeto: copie um bloco <a class="project-card"> inteiro e cole abaixo do último.
+                 Os cards ficam lado a lado (até 3 por vez); quando não cabem mais, as setas aparecem sozinhas. -->
+            <div class="projects-track">
+                <a class="project-card project-link" href="projeto-ms.html">
+                    <h3>🏭 MS · Sistema de Manutenção</h3>
+                    <p>Sistema de gestão de manutenção de maquinário de indústria: avisa quando cada máquina precisa de cuidado, guia o técnico pelo celular e guarda a prova de que o serviço foi feito.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">C#</span>
+                        <span class="tech-tag">ASP.NET Core</span>
+                        <span class="tech-tag">SQLite</span>
+                    </div>
+                    <span class="project-more">Ver as telas do sistema →</span>
+                </a>
+                <a class="project-card project-link" href="projeto-nre.html">
+                    <h3>🧾 NRE · Controle de Gastos Extras</h3>
+                    <p>Sistema que acompanha os gastos fora da rotina de uma fábrica, do pedido até a cobrança do cliente: faz as contas em dólar e em reais, com frete, seguro e impostos, e guarda os documentos de cada compra.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">C#</span>
+                        <span class="tech-tag">ASP.NET Core</span>
+                        <span class="tech-tag">SQLite</span>
+                    </div>
+                    <span class="project-more">Ver as telas do sistema →</span>
+                </a>
+            </div>
+
+            <div class="carousel-nav" hidden>
+                <button class="carousel-arrow prev" type="button" aria-label="Projetos anteriores">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+                </button>
+                <button class="carousel-arrow next" type="button" aria-label="Próximos projetos">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="habilidades">
+        <h2 class="section-title">Habilidades</h2>
+        <div class="skills-grid">
+            <div class="skill-box">
+                <h3>🎨 Frontend</h3>
+                <p>
+                    HTML5 • CSS3<br>
+                    JavaScript • TypeScript<br>
+                    React • Next.js<br>
+                    Vue.js • Tailwind CSS<br>
+                    Responsive Design
+                </p>
+            </div>
+
+            <div class="skill-box">
+                <h3>⚙️ Backend</h3>
+                <p>
+                    Node.js • Express<br>
+                    Python • Django<br>
+                    REST APIs<br>
+                    WebSockets<br>
+                    Autenticação & Segurança
+                </p>
+            </div>
+
+            <div class="skill-box">
+                <h3>🗄️ Banco de Dados</h3>
+                <p>
+                    PostgreSQL<br>
+                    MongoDB<br>
+                    Firebase<br>
+                    Redis<br>
+                    Otimização de Queries
+                </p>
+            </div>
+
+            <div class="skill-box">
+                <h3>🚀 DevOps & Deployment</h3>
+                <p>
+                    Git & GitHub<br>
+                    Docker<br>
+                    AWS • Vercel<br>
+                    CI/CD Pipelines<br>
+                    Linux • Terminal
+                </p>
+            </div>
+
+            <div class="skill-box">
+                <h3>🔍 Ferramentas & Práticas</h3>
+                <p>
+                    Metodologias Ágeis<br>
+                    Testes Unitários<br>
+                    Clean Code<br>
+                    Performance Optimization<br>
+                    System Design
+                </p>
+            </div>
+
+            <div class="skill-box">
+                <h3>💡 Soft Skills</h3>
+                <p>
+                    Comunicação Efetiva<br>
+                    Resolução de Problemas<br>
+                    Trabalho em Equipe<br>
+                    Liderança Técnica<br>
+                    Gestão de Projetos
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section container" id="contato">
+        <div class="contact-section">
+            <h2>Contatos</h2>
+            <p>Tenho interesse em projetos desafiadores e colaborações significativas.
+            Vamos conversar sobre como posso ajudar seu negócio a crescer.</p>
+            <div class="contact-data">
+                <a href="mailto:cauper.dev2001@gmail.com">✉️ cauper.dev2001@gmail.com</a>
+                <a href="https://github.com/cauperdev" target="_blank" rel="noopener">💻 github.com/cauperdev</a>
+                <a href="https://wa.me/5592995366727" target="_blank" rel="noopener">📱 (92) 99536-6727</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024-2025 Cauperdev. Desenvolvido com código limpo.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Carrossel de projetos: as setas só aparecem quando há mais cards do que cabem na tela.
+        const trilho = document.querySelector('.projects-track');
+        const setas = document.querySelector('.carousel-nav');
+        const [anterior, proximo] = setas.querySelectorAll('.carousel-arrow');
+
+        function atualizarSetas() {
+            const sobra = trilho.scrollWidth - trilho.clientWidth;
+            setas.hidden = sobra <= 1;
+            anterior.disabled = trilho.scrollLeft <= 1;
+            proximo.disabled = trilho.scrollLeft >= sobra - 1;
+        }
+
+        // Cada clique anda uma "página": a largura dos cards visíveis mais o espaço entre eles.
+        function rolar(direcao) {
+            const estilo = getComputedStyle(trilho);
+            const pagina = trilho.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight) + parseFloat(estilo.columnGap);
+            trilho.scrollBy({ left: direcao * pagina });
+        }
+
+        anterior.addEventListener('click', () => rolar(-1));
+        proximo.addEventListener('click', () => rolar(1));
+        trilho.addEventListener('scroll', atualizarSetas);
+        new ResizeObserver(atualizarSetas).observe(trilho);
+    </script>
+</body>
+</html>
